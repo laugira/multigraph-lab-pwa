@@ -2343,6 +2343,7 @@ function refreshLocaleUI() {
 
 async function init() {
     await initI18n();
+    window.applyWelcomeVersion?.();
     initLocaleSelector();
     window.onLocaleChange = refreshLocaleUI;
     initSidebar();
@@ -2367,4 +2368,8 @@ async function init() {
     initForms();
 }
 
-window.onload = init;
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => init());
+} else {
+    init();
+}

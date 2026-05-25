@@ -28,8 +28,6 @@ function loadScript(src: string): Promise<void> {
 async function bootstrap() {
     const base = import.meta.env.BASE_URL;
     await loadScript(`${base}js/i18n.js`);
-    await (window as Window & { initI18n?: () => Promise<void> }).initI18n?.();
-    applyWelcomeVersion();
     await loadScript(`${base}js/app.js`);
 
     const { registerSW } = await import('virtual:pwa-register');
