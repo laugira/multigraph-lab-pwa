@@ -28,8 +28,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # Change to VITE_BASE=/ when dynalgo.fr is configured (step 5).
-          VITE_BASE: /multigraph-lab-pwa/
+          VITE_BASE: /
 
       - uses: actions/upload-pages-artifact@v3
         with:
