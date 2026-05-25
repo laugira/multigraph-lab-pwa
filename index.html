@@ -21,6 +21,44 @@
                 margin-left: min(100%, 20rem);
             }
         }
+        #modal-welcome-panel {
+            display: flex;
+            flex-direction: column;
+            max-height: min(88dvh, 42rem);
+            overflow: hidden;
+        }
+        #modal-welcome-body {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-gutter: stable;
+            scrollbar-width: thin;
+            scrollbar-color: rgb(161 161 170) transparent;
+        }
+        .dark #modal-welcome-body {
+            scrollbar-color: rgb(82 82 91) transparent;
+        }
+        #modal-welcome-body::-webkit-scrollbar {
+            width: 10px;
+        }
+        #modal-welcome-body::-webkit-scrollbar-track {
+            background: rgb(244 244 245);
+            border-radius: 4px;
+        }
+        .dark #modal-welcome-body::-webkit-scrollbar-track {
+            background: rgb(39 39 42);
+        }
+        #modal-welcome-body::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background: rgb(161 161 170);
+            border: 2px solid rgb(244 244 245);
+        }
+        .dark #modal-welcome-body::-webkit-scrollbar-thumb {
+            background: rgb(113 113 122);
+            border-color: rgb(39 39 42);
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
 </head>
@@ -473,8 +511,8 @@
 </div>
 
 <div id="modal-welcome" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/40 p-4 dark:bg-black/70" role="dialog" aria-modal="true" aria-labelledby="modal-welcome-title">
-    <div class="flex max-h-[min(90dvh,40rem)] w-full max-w-lg flex-col rounded-xl border border-zinc-300 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
-        <div class="min-h-0 flex-1 overflow-y-auto p-5">
+    <div id="modal-welcome-panel" class="w-full max-w-lg rounded-xl border border-zinc-300 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+        <div id="modal-welcome-body" class="p-5">
             <h3 id="modal-welcome-title" class="mb-2 text-lg font-semibold text-emerald-600 dark:text-emerald-400" data-i18n="welcome.title">Welcome to MultiGraph Lab</h3>
             <p class="mb-4 text-sm text-zinc-600 dark:text-zinc-300" data-i18n="welcome.intro"></p>
 
@@ -483,6 +521,15 @@
 
             <h4 class="mb-1 text-sm font-semibold" data-i18n="welcome.purposeTitle">What is it for?</h4>
             <p class="mb-4 text-sm text-zinc-600 dark:text-zinc-300" data-i18n="welcome.purposeBody"></p>
+
+            <h4 class="mb-1 text-sm font-semibold text-emerald-600 dark:text-emerald-400" data-i18n="welcome.aiTitle">AI workflows</h4>
+            <p class="mb-2 text-sm text-zinc-600 dark:text-zinc-300" data-i18n="welcome.aiIntro"></p>
+            <ol class="mb-4 list-decimal space-y-2 pl-5 text-sm text-zinc-600 dark:text-zinc-300">
+                <li data-i18n="welcome.aiStep1"></li>
+                <li data-i18n="welcome.aiStep2"></li>
+                <li data-i18n="welcome.aiStep3"></li>
+                <li data-i18n="welcome.aiStep4"></li>
+            </ol>
 
             <h4 class="mb-2 text-sm font-semibold" data-i18n="welcome.howTitle">How to use it</h4>
             <ol class="mb-4 list-decimal space-y-2 pl-5 text-sm text-zinc-600 dark:text-zinc-300">
@@ -495,7 +542,7 @@
 
             <p class="text-sm text-zinc-500 dark:text-zinc-400" data-i18n="welcome.offlineNote"></p>
         </div>
-        <div class="shrink-0 border-t border-zinc-200 p-4 dark:border-zinc-800">
+        <div id="modal-welcome-footer" class="shrink-0 border-t border-zinc-200 p-4 dark:border-zinc-800">
             <label class="mb-3 flex cursor-pointer items-start gap-2 text-xs text-zinc-500 dark:text-zinc-400">
                 <input id="welcome-dont-show" type="checkbox" class="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800">
                 <span data-i18n="welcome.dontShow">Don't show again on startup</span>
