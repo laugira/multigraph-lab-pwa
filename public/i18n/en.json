@@ -241,6 +241,7 @@
     "redoDone": "Redone",
     "redoFailed": "Cannot redo",
     "creating": "Creating…",
-    "saving": "Saving…"
+    "saving": "Saving…",
+    "storageFull": "Browser storage is full; changes could not be saved."
   }
 }

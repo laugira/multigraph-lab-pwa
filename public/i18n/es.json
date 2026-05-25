@@ -241,6 +241,7 @@
     "redoDone": "Rehecho",
     "redoFailed": "No se puede rehacer",
     "creating": "Creando…",
-    "saving": "Guardando…"
+    "saving": "Guardando…",
+    "storageFull": "Almacenamiento del navegador lleno; no se pudieron guardar los cambios."
   }
 }

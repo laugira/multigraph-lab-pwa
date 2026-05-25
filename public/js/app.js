@@ -1076,7 +1076,10 @@ function handleGlobalKeydown(e) {
 
 async function apiRequest(url, options = {}) {
     const response = await fetch(url, options);
-    if (!response.ok) throw new Error(await response.text() || `HTTP ${response.status}`);
+    if (!response.ok) {
+        if (response.status === 507) throw new Error(t('toast.storageFull'));
+        throw new Error(await response.text() || `HTTP ${response.status}`);
+    }
     const contentType = response.headers.get('content-type') || '';
     if (contentType.includes('application/json')) return response.json();
     return response.text();
@@ -2214,7 +2217,6 @@ function initForms() {
             : select.value).trim();
         if (!name) { showToast(t('toast.typeRequired'), true); return; }
         const meta = knownRelTypeMeta.get(name);
-        if (!isCreate && !meta?.id) { showToast(t('toast.typeNotFound'), true); return; }
         const displayLabel = document.getElementById('rel-type-display-label').value.trim() || name;
         const color = document.getElementById('rel-type-color').value;
         const lineStyle = document.getElementById('rel-type-style').value;
@@ -2225,9 +2227,22 @@ function initForms() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(isCreate
                         ? { name, displayLabel, color, lineStyle }
-                        : { id: meta.id, name, displayLabel, color, lineStyle })
+                        : {
+                            ...(meta?.id != null ? { id: meta.id } : {}),
+                            name,
+                            displayLabel,
+                            color,
+                            lineStyle
+                        })
                 });
-                if (!response.ok) { showToast(await response.text() || t('toast.error'), true); return; }
+                if (!response.ok) {
+                    const msg = await response.text();
+                    showToast(
+                        response.status === 507 ? t('toast.storageFull') : (msg || t('toast.error')),
+                        true
+                    );
+                    return;
+                }
                 const saved = await response.json();
                 mergeRelationshipTypeMeta(saved);
                 refreshRelTypeSelects();

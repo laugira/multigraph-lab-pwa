@@ -57,8 +57,18 @@ function loadDb(): Database {
     }
 }
 
-function saveDb(db: Database) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+function saveDb(db: Database): boolean {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+        return true;
+    } catch (err) {
+        console.error('Failed to persist graph data:', err);
+        return false;
+    }
+}
+
+function persistOrFail(db: Database, response: Response): Response {
+    return saveDb(db) ? response : textResponse('Storage full or unavailable', 507);
 }
 
 function cloneEntity(entity: Entity): Entity {
@@ -77,13 +87,46 @@ function findTypeById(db: Database, id: number): RelationshipType | undefined {
     return db.relationshipTypes.find(t => t.id === id);
 }
 
-function syncTypeOnRelationships(db: Database, type: RelationshipType) {
+function syncTypeOnRelationships(db: Database, type: RelationshipType, previousName?: string) {
     db.relationships = db.relationships.map(rel => {
-        if (rel.type.id === type.id || rel.type.name === type.name) {
+        const matches =
+            rel.type.id === type.id ||
+            rel.type.name === type.name ||
+            (previousName != null && rel.type.name === previousName);
+        if (matches) {
             return { ...rel, type: { ...type } };
         }
         return rel;
     });
+}
+
+/** Register a type from an edge copy into the catalog when missing. */
+function ensureTypeInCatalog(db: Database, type: RelationshipType): RelationshipType {
+    const byName = findTypeByName(db, type.name);
+    if (byName) return byName;
+    if (type.id != null) {
+        const byId = findTypeById(db, type.id);
+        if (byId) return byId;
+    }
+    const entry: RelationshipType = {
+        ...type,
+        id: type.id ?? db.nextTypeId++,
+    };
+    db.relationshipTypes.push(entry);
+    return entry;
+}
+
+function resolveTypeForAdmin(db: Database, bodyId: number, name: string): RelationshipType | undefined {
+    if (!Number.isNaN(bodyId)) {
+        const byId = findTypeById(db, bodyId);
+        if (byId) return byId;
+    }
+    if (!name) return undefined;
+    const byName = findTypeByName(db, name);
+    if (byName) return byName;
+    const rel = db.relationships.find(r => r.type.name === name);
+    if (rel) return ensureTypeInCatalog(db, rel.type);
+    return undefined;
 }
 
 function findOrCreateType(
@@ -164,8 +207,7 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
 
     if (pathname === '/graph' && method === 'DELETE') {
         const cleared = emptyDb();
-        saveDb(cleared);
-        return new Response(null, { status: 204 });
+        return persistOrFail(cleared, new Response(null, { status: 204 }));
     }
 
     if (pathname === '/entities' && method === 'GET') {
@@ -182,8 +224,7 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
             description: (body.description as string) || null,
         };
         db.entities.push(entity);
-        saveDb(db);
-        return jsonResponse(entity);
+        return persistOrFail(db, jsonResponse(entity));
     }
 
     const entityMatch = pathname.match(/^\/entities\/(\d+)$/);
@@ -206,8 +247,7 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
                 source: rel.source.id === id ? updated : rel.source,
                 target: rel.target.id === id ? updated : rel.target,
             }));
-            saveDb(db);
-            return jsonResponse(updated);
+            return persistOrFail(db, jsonResponse(updated));
         }
         if (method === 'DELETE') {
             const index = db.entities.findIndex(e => e.id === id);
@@ -216,8 +256,7 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
             db.relationships = db.relationships.filter(
                 rel => rel.source.id !== id && rel.target.id !== id
             );
-            saveDb(db);
-            return textResponse('Entity deleted');
+            return persistOrFail(db, textResponse('Entity deleted'));
         }
     }
 
@@ -251,8 +290,7 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
             weight: '1',
         };
         db.relationships.push(relationship);
-        saveDb(db);
-        return jsonResponse(relationship);
+        return persistOrFail(db, jsonResponse(relationship));
     }
 
     const relMatch = pathname.match(/^\/relationships\/(\d+)$/);
@@ -269,8 +307,14 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
             if (!source) return textResponse('Source entity not found', 404);
             if (!target) return textResponse('Target entity not found', 404);
             const typeName = String(body.typeName ?? '').trim();
-            const relType = findTypeByName(db, typeName);
-            if (!relType) return textResponse(`Relationship type '${typeName}' not found`, 404);
+            if (!typeName) return textResponse('Relationship type name is required', 400);
+            const relType = findOrCreateType(
+                db,
+                typeName,
+                (body.color as string) || '#60a5fa',
+                (body.lineStyle as string) || 'solid',
+                (body.label as string) || null
+            );
             const updated: Relationship = {
                 id,
                 source: cloneEntity(source),
@@ -280,13 +324,11 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
                 weight: '1',
             };
             db.relationships[index] = updated;
-            saveDb(db);
-            return jsonResponse(updated);
+            return persistOrFail(db, jsonResponse(updated));
         }
         if (method === 'DELETE') {
             db.relationships.splice(index, 1);
-            saveDb(db);
-            return textResponse('Relationship deleted');
+            return persistOrFail(db, textResponse('Relationship deleted'));
         }
     }
 
@@ -298,10 +340,9 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
         const body = parseBody(init);
         const name = String(body.name ?? '').trim();
         const bodyId = body.id != null ? Number(body.id) : NaN;
-        const existing =
-            (!Number.isNaN(bodyId) ? findTypeById(db, bodyId) : undefined) ??
-            (name ? findTypeByName(db, name) : undefined);
+        const existing = resolveTypeForAdmin(db, bodyId, name);
         if (existing) {
+            const previousName = existing.name;
             if (name) existing.name = name;
             if (body.displayLabel !== undefined) {
                 existing.displayLabel = (body.displayLabel as string) || null;
@@ -312,10 +353,11 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
             if (body.lineStyle !== undefined) {
                 existing.lineStyle = (body.lineStyle as string) || existing.lineStyle;
             }
-            syncTypeOnRelationships(db, existing);
-            saveDb(db);
-            return jsonResponse(existing);
+            const renamed = previousName !== existing.name;
+            syncTypeOnRelationships(db, existing, renamed ? previousName : undefined);
+            return persistOrFail(db, jsonResponse(existing));
         }
+        if (!name) return textResponse('Type name is required', 400);
         const created: RelationshipType = {
             id: db.nextTypeId++,
             name,
@@ -325,8 +367,7 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
             description: (body.description as string) || null,
         };
         db.relationshipTypes.push(created);
-        saveDb(db);
-        return jsonResponse(created);
+        return persistOrFail(db, jsonResponse(created));
     }
 
     return null;

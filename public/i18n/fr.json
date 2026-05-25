@@ -241,6 +241,7 @@
     "redoDone": "Rétabli",
     "redoFailed": "Impossible de rétablir",
     "creating": "Création…",
-    "saving": "Enregistrement…"
+    "saving": "Enregistrement…",
+    "storageFull": "Espace de stockage du navigateur saturé ; les modifications n'ont pas pu être enregistrées."
   }
 }
