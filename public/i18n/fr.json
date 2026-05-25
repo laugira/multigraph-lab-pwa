@@ -9,6 +9,7 @@
     "detail": "Détail",
     "ai": "IA",
     "sections": "Sections",
+    "guide": "Guide",
     "help": "Aide (?)",
     "pin": "Épingler la barre latérale",
     "unpin": "Désépingler la barre latérale"
@@ -112,6 +113,24 @@
     "in": "Zoom avant",
     "out": "Zoom arrière",
     "fit": "Ajuster le graphe"
+  },
+  "welcome": {
+    "title": "Bienvenue dans MultiGraph Lab",
+    "intro": "Une application navigateur pour construire et explorer des graphes de relations — entités en nœuds, liens typés entre elles.",
+    "whatTitle": "Qu'est-ce que c'est ?",
+    "whatBody": "Chaque nœud est une entité (personne, organisation, concept, etc.). Les arêtes sont des relations entre elles. Le graphe fait apparaître structure, dépendances et connexions d'un coup d'œil.",
+    "purposeTitle": "À quoi ça sert ?",
+    "purposeBody": "Modéliser des réseaux, organigrammes, cartes de connaissances ou tout sujet à représenter en entités et liens. Tout fonctionne dans le navigateur : pas de compte ni de serveur. Les données restent sur votre appareil.",
+    "howTitle": "Comment s'en servir",
+    "step1": "Onglet Créer → Entité : ajouter des nœuds (nom, type, description optionnelle).",
+    "step2": "Onglet Créer → Lien : relier deux entités avec un type de relation (noms ou clic sur les nœuds du graphe).",
+    "step3": "Parcourir : rechercher, filtrer par type, sélectionner ; le graphe peut se centrer sur la sélection.",
+    "step4": "Détail : consulter ou modifier l'entité ou la relation sélectionnée.",
+    "step5": "Graphe : glisser pour déplacer, molette pour zoomer, clic pour sélectionner. Barre d'outils : mode lien, réorganiser, annuler/rétablir.",
+    "offlineNote": "Votre graphe est enregistré localement dans ce navigateur. Vous pouvez installer l'application (PWA) pour un accès rapide depuis l'écran d'accueil.",
+    "dontShow": "Ne plus afficher au démarrage",
+    "shortcutsLink": "Raccourcis clavier (?)",
+    "gotIt": "Compris"
   },
   "help": {
     "title": "Raccourcis clavier",

@@ -9,6 +9,7 @@
     "detail": "Detail",
     "ai": "AI",
     "sections": "Sections",
+    "guide": "Guide",
     "help": "Help (?)",
     "pin": "Pin sidebar",
     "unpin": "Unpin sidebar"
@@ -112,6 +113,24 @@
     "in": "Zoom in",
     "out": "Zoom out",
     "fit": "Fit graph"
+  },
+  "welcome": {
+    "title": "Welcome to MultiGraph Lab",
+    "intro": "A browser app to build and explore relationship graphs visually — entities as nodes, connections as typed links.",
+    "whatTitle": "What is it?",
+    "whatBody": "Each node is an entity (person, organization, concept, etc.). Edges are relationships between them. The graph shows structure, dependencies and connections at a glance.",
+    "purposeTitle": "What is it for?",
+    "purposeBody": "Model networks, org charts, knowledge maps, or any topic you want to map. Everything runs in your browser: no account and no server required. Data stays on your device.",
+    "howTitle": "How to use it",
+    "step1": "Create tab → Entity: add nodes (name, type, optional description).",
+    "step2": "Create tab → Link: connect two entities with a relationship type (names or click nodes on the graph).",
+    "step3": "Browse: search, filter by type, and select entities; the graph can focus on your selection.",
+    "step4": "Detail: view or edit the selected entity or relationship.",
+    "step5": "Graph: drag to pan, scroll to zoom, click to select. Toolbar: link mode, reorganize layout, undo/redo.",
+    "offlineNote": "Your graph is saved locally in this browser. You can install the app (PWA) for quick access from your home screen.",
+    "dontShow": "Don't show again on startup",
+    "shortcutsLink": "Keyboard shortcuts (?)",
+    "gotIt": "Got it"
   },
   "help": {
     "title": "Keyboard shortcuts",

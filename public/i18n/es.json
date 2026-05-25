@@ -9,6 +9,7 @@
     "detail": "Detalle",
     "ai": "IA",
     "sections": "Secciones",
+    "guide": "Guía",
     "help": "Ayuda (?)",
     "pin": "Fijar barra lateral",
     "unpin": "Desfijar barra lateral"
@@ -112,6 +113,24 @@
     "in": "Acercar",
     "out": "Alejar",
     "fit": "Ajustar grafo"
+  },
+  "welcome": {
+    "title": "Bienvenido a MultiGraph Lab",
+    "intro": "Una aplicación de navegador para construir y explorar grafos de relaciones: entidades como nodos y vínculos tipados.",
+    "whatTitle": "¿Qué es?",
+    "whatBody": "Cada nodo es una entidad (persona, organización, concepto, etc.). Las aristas son relaciones entre ellas. El grafo muestra estructura, dependencias y conexiones de un vistazo.",
+    "purposeTitle": "¿Para qué sirve?",
+    "purposeBody": "Modelar redes, organigramas, mapas de conocimiento o cualquier tema. Todo funciona en el navegador: sin cuenta ni servidor. Los datos permanecen en su dispositivo.",
+    "howTitle": "Cómo usarla",
+    "step1": "Pestaña Crear → Entidad: añadir nodos (nombre, tipo, descripción opcional).",
+    "step2": "Pestaña Crear → Enlace: conectar dos entidades con un tipo de relación (nombres o clic en nodos).",
+    "step3": "Explorar: buscar, filtrar por tipo y seleccionar; el grafo puede centrarse en la selección.",
+    "step4": "Detalle: ver o editar la entidad o relación seleccionada.",
+    "step5": "Grafo: arrastrar para mover, rueda para zoom, clic para seleccionar. Barra: modo enlace, reorganizar, deshacer/rehacer.",
+    "offlineNote": "Su grafo se guarda localmente en este navegador. Puede instalar la app (PWA) para acceso rápido desde la pantalla de inicio.",
+    "dontShow": "No mostrar de nuevo al iniciar",
+    "shortcutsLink": "Atajos de teclado (?)",
+    "gotIt": "Entendido"
   },
   "help": {
     "title": "Atajos de teclado",

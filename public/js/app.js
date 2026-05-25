@@ -59,6 +59,7 @@ const CYTO_LABEL_THEME = {
     }
 };
 const HELP_SEEN_KEY = 'multigraph-help-seen';
+const WELCOME_SKIP_KEY = 'multigraph-welcome-skip';
 const SIDEBAR_PINNED_KEY = 'multigraph-sidebar-pinned';
 const LINK_SUGGESTION_LIMIT = 8;
 const TOAST_DURATION_MS = 2200;
@@ -1040,12 +1041,14 @@ function initKeyboardShortcuts() {
 }
 
 function handleGlobalKeydown(e) {
+    const welcomeOpen = !document.getElementById('modal-welcome').classList.contains('hidden');
     const helpOpen = !document.getElementById('modal-help').classList.contains('hidden');
     const confirmOpen = !document.getElementById('modal-confirm').classList.contains('hidden');
     const descriptionOpen = !document.getElementById('modal-entity-description').classList.contains('hidden');
 
     if (e.key === 'Escape') {
         if (descriptionOpen) { e.preventDefault(); hideEntityDescriptionModal(); return; }
+        if (welcomeOpen) { e.preventDefault(); hideWelcomeModal(); return; }
         if (helpOpen) { e.preventDefault(); hideHelpModal(); return; }
         if (confirmOpen) { e.preventDefault(); hideConfirm(); return; }
         if (selectedElement) { e.preventDefault(); clearSelection(); }
@@ -2249,6 +2252,21 @@ function initActionButtons() {
     window.addEventListener('resize', applySidebarLayoutState);
 }
 
+function showWelcomeModal() {
+    const modal = document.getElementById('modal-welcome');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function hideWelcomeModal() {
+    const modal = document.getElementById('modal-welcome');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    if (document.getElementById('welcome-dont-show')?.checked) {
+        localStorage.setItem(WELCOME_SKIP_KEY, '1');
+    }
+}
+
 function showHelpModal() {
     localStorage.setItem(HELP_SEEN_KEY, '1');
     document.getElementById('modal-help').classList.remove('hidden');
@@ -2260,13 +2278,27 @@ function hideHelpModal() {
     document.getElementById('modal-help').classList.remove('flex');
 }
 
+function initWelcomeModal() {
+    document.getElementById('sidebar-guide-link')?.addEventListener('click', showWelcomeModal);
+    document.getElementById('modal-welcome-close')?.addEventListener('click', hideWelcomeModal);
+    document.getElementById('modal-welcome-shortcuts')?.addEventListener('click', () => {
+        hideWelcomeModal();
+        showHelpModal();
+    });
+    document.getElementById('modal-welcome')?.addEventListener('click', (e) => {
+        if (e.target.id === 'modal-welcome') hideWelcomeModal();
+    });
+    if (!localStorage.getItem(WELCOME_SKIP_KEY)) {
+        setTimeout(showWelcomeModal, 500);
+    }
+}
+
 function initHelpModal() {
     document.getElementById('sidebar-help-link')?.addEventListener('click', showHelpModal);
     document.getElementById('modal-help-close')?.addEventListener('click', hideHelpModal);
     document.getElementById('modal-help')?.addEventListener('click', (e) => {
         if (e.target.id === 'modal-help') hideHelpModal();
     });
-    if (!localStorage.getItem(HELP_SEEN_KEY)) setTimeout(showHelpModal, 700);
 }
 
 function refreshLocaleUI() {
@@ -2303,6 +2335,7 @@ async function init() {
     initActionButtons();
     initHistoryControls();
     initKeyboardShortcuts();
+    initWelcomeModal();
     initHelpModal();
     initEntityList();
     initRelLegend();
