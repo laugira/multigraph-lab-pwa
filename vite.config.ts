@@ -1,12 +1,21 @@
+import { readFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 /** GitHub project pages test URL; set VITE_BASE=/ before dynalgo.fr (step 5). */
 const base = process.env.VITE_BASE ?? '/multigraph-lab-pwa/';
+const appVersion = JSON.parse(
+    readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), 'package.json'), 'utf-8')
+).version as string;
 
 export default defineConfig({
     base,
     publicDir: 'public',
+    define: {
+        'import.meta.env.VITE_APP_VERSION': JSON.stringify(appVersion),
+    },
     plugins: [
         VitePWA({
             registerType: 'autoUpdate',

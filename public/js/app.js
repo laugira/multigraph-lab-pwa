@@ -2338,6 +2338,7 @@ function refreshLocaleUI() {
         setRelFormMode('create-link');
     }
     applySidebarLayoutState();
+    window.applyWelcomeVersion?.();
 }
 
 async function init() {
