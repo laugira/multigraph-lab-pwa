@@ -6,7 +6,9 @@ function applyWelcomeVersion() {
     const el = document.getElementById('welcome-version');
     if (!el) return;
     const tFn = (window as Window & { t?: (key: string) => string }).t;
-    const title = tFn?.('meta.pageTitle') ?? 'MultiGraph Lab';
+    const translated = tFn?.('meta.pageTitle');
+    const title =
+        translated && translated !== 'meta.pageTitle' ? translated : 'MultiGraph Lab';
     el.textContent = `${title} · v${import.meta.env.VITE_APP_VERSION}`;
 }
 
@@ -26,6 +28,7 @@ function loadScript(src: string): Promise<void> {
 async function bootstrap() {
     const base = import.meta.env.BASE_URL;
     await loadScript(`${base}js/i18n.js`);
+    await (window as Window & { initI18n?: () => Promise<void> }).initI18n?.();
     applyWelcomeVersion();
     await loadScript(`${base}js/app.js`);
 
