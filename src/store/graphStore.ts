@@ -73,6 +73,19 @@ function findTypeByName(db: Database, name: string): RelationshipType | undefine
     return db.relationshipTypes.find(t => t.name === name);
 }
 
+function findTypeById(db: Database, id: number): RelationshipType | undefined {
+    return db.relationshipTypes.find(t => t.id === id);
+}
+
+function syncTypeOnRelationships(db: Database, type: RelationshipType) {
+    db.relationships = db.relationships.map(rel => {
+        if (rel.type.id === type.id || rel.type.name === type.name) {
+            return { ...rel, type: { ...type } };
+        }
+        return rel;
+    });
+}
+
 function findOrCreateType(
     db: Database,
     name: string,
@@ -284,11 +297,22 @@ export function handleOfflineApi(pathname: string, method: string, init?: Reques
     if (pathname === '/relationship-types' && method === 'POST') {
         const body = parseBody(init);
         const name = String(body.name ?? '').trim();
-        const existing = findTypeByName(db, name);
+        const bodyId = body.id != null ? Number(body.id) : NaN;
+        const existing =
+            (!Number.isNaN(bodyId) ? findTypeById(db, bodyId) : undefined) ??
+            (name ? findTypeByName(db, name) : undefined);
         if (existing) {
-            existing.displayLabel = (body.displayLabel as string) || existing.displayLabel;
-            existing.color = (body.color as string) || existing.color;
-            existing.lineStyle = (body.lineStyle as string) || existing.lineStyle;
+            if (name) existing.name = name;
+            if (body.displayLabel !== undefined) {
+                existing.displayLabel = (body.displayLabel as string) || null;
+            }
+            if (body.color !== undefined) {
+                existing.color = (body.color as string) || existing.color;
+            }
+            if (body.lineStyle !== undefined) {
+                existing.lineStyle = (body.lineStyle as string) || existing.lineStyle;
+            }
+            syncTypeOnRelationships(db, existing);
             saveDb(db);
             return jsonResponse(existing);
         }
