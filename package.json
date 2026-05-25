@@ -1,0 +1,19 @@
+{
+  "name": "multigraph-lab-pwa",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MultiGraph Lab — PWA (offline, browser-only)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "build:production-domain": "VITE_BASE=/ npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.3",
+    "vite-plugin-pwa": "^0.21.1"
+  }
+}

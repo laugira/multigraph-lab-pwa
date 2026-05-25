@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "pageTitle": "MultiGraph Lab"
+  },
+  "sidebar": {
+    "close": "Fechar menu",
+    "browse": "Explorar",
+    "create": "Criar",
+    "detail": "Detalhe",
+    "ai": "IA",
+    "sections": "Secções",
+    "help": "Ajuda (?)",
+    "pin": "Fixar barra lateral",
+    "unpin": "Desafixar barra lateral"
+  },
+  "browse": {
+    "searchPlaceholder": "Pesquisar por nome, tipo ou relação…",
+    "search": "Pesquisa",
+    "entityType": "Tipo de entidade",
+    "relationshipType": "Tipo de relação",
+    "allTypes": "Todos os tipos de entidade",
+    "allRelTypes": "Todos os tipos de relação",
+    "loading": "A carregar…",
+    "empty": "Nenhuma entidade",
+    "focusOnSelect": "Centrar o grafo na seleção"
+  },
+  "create": {
+    "groupLabel": "Tipo de criação",
+    "entity": "Entidade",
+    "link": "Ligação",
+    "type": "Tipo",
+    "advanced": "Avançado",
+    "linkPendingTitle": "Ligação em curso",
+    "linkCancel": "Cancelar",
+    "linkHint": "Escreva os nomes das entidades ou clique nos nós do grafo para preencher origem e destino.",
+    "linkSourcePlaceholder": "Nome da entidade de origem",
+    "linkTargetPlaceholder": "Nome da entidade de destino",
+    "relTypeAdmin": "Tipo de relação (administração)",
+    "relTypeAdminHint": "Criar ou atualizar um tipo de relação: etiqueta, cor e estilo de linha.",
+    "relTypeName": "Nome do tipo",
+    "relTypeCustomPlaceholder": "Novo tipo (ex.: WORKS_WITH)",
+    "createRelType": "Criar tipo",
+    "updateRelType": "Atualizar tipo",
+    "lineSolid": "Linha contínua",
+    "lineDashed": "Linha tracejada"
+  },
+  "detail": {
+    "empty": "Selecione um nó ou uma relação no grafo."
+  },
+  "entity": {
+    "new": "Nova entidade",
+    "defaultTitle": "Entidade",
+    "namePlaceholder": "Nome",
+    "name": "Nome",
+    "type": "Tipo",
+    "typeCustomPlaceholder": "Novo tipo",
+    "customType": "Tipo personalizado",
+    "create": "Criar",
+    "save": "Guardar",
+    "advanced": "Opções avançadas",
+    "descriptionPlaceholder": "Descrição (opcional)",
+    "description": "Descrição",
+    "descriptionViewAll": "Ver tudo",
+    "color": "Cor",
+    "delete": "Eliminar",
+    "linkFrom": "Ligar"
+  },
+  "relationship": {
+    "title": "Relação",
+    "newLink": "Nova ligação",
+    "edit": "Editar relação",
+    "source": "Origem",
+    "target": "Destino",
+    "type": "Tipo",
+    "typeCustomPlaceholder": "Novo tipo",
+    "label": "Etiqueta de apresentação",
+    "labelPlaceholder": "Etiqueta da ligação",
+    "createLink": "Criar ligação",
+    "save": "Guardar",
+    "advancedStyle": "Estilo avançado",
+    "delete": "Eliminar",
+    "fallbackLabel": "Relação",
+    "lineStyle": "Estilo de linha"
+  },
+  "header": {
+    "openMenu": "Abrir menu",
+    "graphTitle": "Multigrafo",
+    "help": "Ajuda",
+    "helpTitle": "Ajuda (?)",
+    "theme": "Tema",
+    "history": "Histórico",
+    "undo": "Anular",
+    "redo": "Refazer",
+    "modeSelect": "Selecionar",
+    "modeLink": "Ligar",
+    "reorganize": "Reorganizar",
+    "reorganizeTitle": "Recalcular disposição",
+    "reset": "Reset",
+    "resetTitle": "Limpar o grafo e recomeçar",
+    "refresh": "Atualizar",
+    "refreshTitle": "Recarregar dados",
+    "language": "Idioma"
+  },
+  "legend": {
+    "title": "Relações",
+    "toggle": "Mostrar ou ocultar legenda"
+  },
+  "mobile": {
+    "createEntity": "Criar uma entidade"
+  },
+  "zoom": {
+    "in": "Aumentar zoom",
+    "out": "Diminuir zoom",
+    "fit": "Ajustar ao grafo"
+  },
+  "help": {
+    "title": "Atalhos de teclado",
+    "undo": "Anular",
+    "redo": "Refazer",
+    "modeLink": "Modo ligar",
+    "modeSelect": "Modo seleção",
+    "delete": "Eliminar seleção",
+    "deselect": "Desselecionar / cancelar",
+    "showHelp": "Mostrar esta ajuda",
+    "contact": "Contacto:",
+    "close": "Fechar"
+  },
+  "confirm": {
+    "title": "Confirmar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "deleteEntityTitle": "Eliminar entidade",
+    "deleteEntityMessage": "Eliminar « {{name}} » e as suas relações?",
+    "deleteRelTitle": "Eliminar relação",
+    "deleteRelMessage": "Eliminar esta relação do grafo?",
+    "resetTitle": "Repor o grafo?",
+    "resetMessage": "Todas as entidades, ligações e tipos de relação serão eliminados. Esta ação é irreversível.",
+    "resetOk": "Repor"
+  },
+  "link": {
+    "pending": "Origem: « {{source}} » — escolha o destino."
+  },
+  "stats": {
+    "summary": "{{entities}} entidades · {{links}} ligações",
+    "dash": "—"
+  },
+  "form": {
+    "chooseType": "— Escolher um tipo —",
+    "otherType": "Outro tipo…"
+  },
+  "theme": {
+    "auto": "Tema: automático",
+    "light": "Tema: claro",
+    "dark": "Tema: escuro"
+  },
+  "ai": {
+    "hint": "Fluxo: 1) criar um grafo a partir de um documento, 2) melhorá-lo, 3) importar a resposta JSON, 4) gerar uma síntese textual.",
+    "fromDocument": "Criar a partir de um documento",
+    "copyPrompt": "Copiar prompt para IA",
+    "copyPromptTitle": "Copiar um prompt pronto para analisar um documento",
+    "copyPromptDone": "Prompt copiado para a área de transferência",
+    "copyPromptFailed": "Não foi possível copiar o prompt",
+    "existingGraph": "Melhorar o grafo existente",
+    "title": "Troca com IA",
+    "export": "Exportar para IA",
+    "exportTitle": "Copiar o grafo e o prompt para a área de transferência",
+    "exportDone": "Copiado para a área de transferência",
+    "exportFailed": "Não foi possível copiar",
+    "textSynthesis": "Síntese textual",
+    "generateSynthesis": "Gerar síntese textual",
+    "generateSynthesisTitle": "Copiar um prompt para gerar um resumo textual do grafo",
+    "synthesisDone": "Prompt de síntese copiado para a área de transferência",
+    "synthesisFailed": "Não foi possível copiar o prompt de síntese",
+    "importTitle": "Importar da IA",
+    "importPlaceholder": "Cole aqui a resposta JSON da IA…",
+    "import": "Importar grafo",
+    "importConfirmTitle": "Substituir o grafo?",
+    "importConfirmMessage": "Todas as entidades e relações atuais serão eliminadas e o grafo importado será carregado.",
+    "importConfirmOk": "Importar",
+    "importDone": "Grafo importado",
+    "importFailed": "JSON inválido ou ilegível",
+    "importEmpty": "Cole primeiro uma resposta JSON",
+    "viewPrompt": "Ver ou editar o prompt",
+    "promptModalTitleDocument": "Prompt — criar a partir de um documento",
+    "promptModalTitleExport": "Prompt — melhorar o grafo existente",
+    "promptModalTitleSynthesis": "Prompt — síntese textual",
+    "promptModalHintGraphJson": "Ao copiar ou exportar, o JSON do grafo atual é adicionado após este texto.",
+    "promptModalReset": "Repor predefinição",
+    "promptModalCancel": "Cancelar",
+    "promptModalSave": "Guardar",
+    "promptModalSaved": "Prompt guardado",
+    "promptModalResetDone": "Prompt predefinido reposto"
+  },
+  "errors": {
+    "entityNotFound": "Entidade não encontrada ({{name}})"
+  },
+  "toast": {
+    "created": "Criado",
+    "saved": "Guardado",
+    "deleted": "Eliminado",
+    "linkCreated": "Ligação criada",
+    "typeAdded": "Tipo adicionado",
+    "typeUpdated": "Tipo atualizado",
+    "typeNotFound": "Tipo não encontrado",
+    "updated": "Atualizado",
+    "layoutDone": "Disposição recalculada",
+    "resetDone": "Grafo limpo",
+    "emptyGraph": "Grafo vazio",
+    "loadError": "Erro ao carregar",
+    "error": "Erro",
+    "networkError": "Erro de rede",
+    "typeRequired": "Tipo obrigatório",
+    "endpointsRequired": "Origem e destino são obrigatórios",
+    "undoDone": "Anulado",
+    "undoFailed": "Não foi possível anular",
+    "redoDone": "Refeito",
+    "redoFailed": "Não foi possível refazer",
+    "creating": "A criar…",
+    "saving": "A guardar…"
+  }
+}

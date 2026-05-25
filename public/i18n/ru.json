@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "pageTitle": "MultiGraph Lab"
+  },
+  "sidebar": {
+    "close": "Закрыть меню",
+    "browse": "Обзор",
+    "create": "Создать",
+    "detail": "Детали",
+    "ai": "ИИ",
+    "sections": "Разделы",
+    "help": "Справка (?)",
+    "pin": "Закрепить боковую панель",
+    "unpin": "Открепить боковую панель"
+  },
+  "browse": {
+    "searchPlaceholder": "Поиск по имени, типу или связи…",
+    "search": "Поиск",
+    "entityType": "Тип сущности",
+    "relationshipType": "Тип связи",
+    "allTypes": "Все типы сущностей",
+    "allRelTypes": "Все типы связей",
+    "loading": "Загрузка…",
+    "empty": "Нет сущностей",
+    "focusOnSelect": "Центрировать граф на выбранном"
+  },
+  "create": {
+    "groupLabel": "Тип создания",
+    "entity": "Сущность",
+    "link": "Связь",
+    "type": "Тип",
+    "advanced": "Дополнительно",
+    "linkPendingTitle": "Связь в процессе",
+    "linkCancel": "Отмена",
+    "linkHint": "Введите имена или нажмите на узлы графа, чтобы указать источник и цель.",
+    "linkSourcePlaceholder": "Имя сущности-источника",
+    "linkTargetPlaceholder": "Имя сущности-цели",
+    "relTypeAdmin": "Тип связи (администрирование)",
+    "relTypeAdminHint": "Создайте или обновите тип связи: отображаемая метка, цвет и стиль линии.",
+    "relTypeName": "Название типа",
+    "relTypeCustomPlaceholder": "Новый тип (напр. WORKS_WITH)",
+    "createRelType": "Создать тип",
+    "updateRelType": "Обновить тип",
+    "lineSolid": "Сплошная линия",
+    "lineDashed": "Пунктирная линия"
+  },
+  "detail": {
+    "empty": "Выберите узел или связь на графе."
+  },
+  "entity": {
+    "new": "Новая сущность",
+    "defaultTitle": "Сущность",
+    "namePlaceholder": "Имя",
+    "name": "Имя",
+    "type": "Тип",
+    "typeCustomPlaceholder": "Новый тип",
+    "customType": "Свой тип",
+    "create": "Создать",
+    "save": "Сохранить",
+    "advanced": "Дополнительные параметры",
+    "descriptionPlaceholder": "Описание (необязательно)",
+    "description": "Описание",
+    "descriptionViewAll": "Показать всё",
+    "color": "Цвет",
+    "delete": "Удалить",
+    "linkFrom": "Связать"
+  },
+  "relationship": {
+    "title": "Связь",
+    "newLink": "Новая связь",
+    "edit": "Редактировать связь",
+    "source": "Источник",
+    "target": "Цель",
+    "type": "Тип",
+    "typeCustomPlaceholder": "Новый тип",
+    "label": "Отображаемая метка",
+    "labelPlaceholder": "Метка связи",
+    "createLink": "Создать связь",
+    "save": "Сохранить",
+    "advancedStyle": "Расширенный стиль",
+    "delete": "Удалить",
+    "fallbackLabel": "Связь",
+    "lineStyle": "Стиль линии"
+  },
+  "header": {
+    "openMenu": "Открыть меню",
+    "graphTitle": "Мультиграф",
+    "help": "Справка",
+    "helpTitle": "Справка (?)",
+    "theme": "Тема",
+    "history": "История",
+    "undo": "Отменить",
+    "redo": "Повторить",
+    "modeSelect": "Выбор",
+    "modeLink": "Связь",
+    "reorganize": "Перестроить",
+    "reorganizeTitle": "Пересчитать расположение",
+    "reset": "Reset",
+    "resetTitle": "Очистить граф и начать заново",
+    "refresh": "Обновить",
+    "refreshTitle": "Перезагрузить данные",
+    "language": "Язык"
+  },
+  "legend": {
+    "title": "Связи",
+    "toggle": "Показать или скрыть легенду"
+  },
+  "mobile": {
+    "createEntity": "Создать сущность"
+  },
+  "zoom": {
+    "in": "Увеличить",
+    "out": "Уменьшить",
+    "fit": "Подогнать граф"
+  },
+  "help": {
+    "title": "Горячие клавиши",
+    "undo": "Отменить",
+    "redo": "Повторить",
+    "modeLink": "Режим связи",
+    "modeSelect": "Режим выбора",
+    "delete": "Удалить выделение",
+    "deselect": "Снять выделение / отмена",
+    "showHelp": "Показать справку",
+    "contact": "Контакт:",
+    "close": "Закрыть"
+  },
+  "confirm": {
+    "title": "Подтверждение",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "deleteEntityTitle": "Удалить сущность",
+    "deleteEntityMessage": "Удалить « {{name}} » и все её связи?",
+    "deleteRelTitle": "Удалить связь",
+    "deleteRelMessage": "Удалить эту связь с графа?",
+    "resetTitle": "Сбросить граф?",
+    "resetMessage": "Все сущности, связи и типы связей будут удалены. Это действие необратимо.",
+    "resetOk": "Сбросить"
+  },
+  "link": {
+    "pending": "Источник: « {{source}} » — выберите цель."
+  },
+  "stats": {
+    "summary": "{{entities}} сущностей · {{links}} связей",
+    "dash": "—"
+  },
+  "form": {
+    "chooseType": "— Выберите тип —",
+    "otherType": "Другой тип…"
+  },
+  "theme": {
+    "auto": "Тема: автоматически",
+    "light": "Тема: светлая",
+    "dark": "Тема: тёмная"
+  },
+  "ai": {
+    "hint": "Сценарий: 1) создать граф из документа, 2) улучшить его, 3) импортировать JSON-ответ, 4) сгенерировать текстовый синтез.",
+    "fromDocument": "Создать из документа",
+    "copyPrompt": "Скопировать промпт для ИИ",
+    "copyPromptTitle": "Скопировать готовый промпт для анализа документа",
+    "copyPromptDone": "Промпт скопирован в буфер обмена",
+    "copyPromptFailed": "Не удалось скопировать промпт",
+    "existingGraph": "Улучшить существующий граф",
+    "title": "Обмен с ИИ",
+    "export": "Экспорт для ИИ",
+    "exportTitle": "Скопировать граф и промпт в буфер обмена",
+    "exportDone": "Скопировано в буфер обмена",
+    "exportFailed": "Не удалось скопировать",
+    "textSynthesis": "Текстовый синтез",
+    "generateSynthesis": "Сгенерировать текстовый синтез",
+    "generateSynthesisTitle": "Скопировать промпт для текстового резюме графа",
+    "synthesisDone": "Промпт синтеза скопирован в буфер обмена",
+    "synthesisFailed": "Не удалось скопировать промпт синтеза",
+    "importTitle": "Импорт из ИИ",
+    "importPlaceholder": "Вставьте JSON-ответ ИИ…",
+    "import": "Импортировать граф",
+    "importConfirmTitle": "Заменить граф?",
+    "importConfirmMessage": "Все текущие сущности и связи будут удалены, затем загружен импортированный граф.",
+    "importConfirmOk": "Импортировать",
+    "importDone": "Граф импортирован",
+    "importFailed": "Недопустимый или нечитаемый JSON",
+    "importEmpty": "Сначала вставьте JSON-ответ",
+    "viewPrompt": "Просмотреть или изменить промпт",
+    "promptModalTitleDocument": "Промпт — создать из документа",
+    "promptModalTitleExport": "Промпт — улучшить существующий граф",
+    "promptModalTitleSynthesis": "Промпт — текстовый синтез",
+    "promptModalHintGraphJson": "При копировании или экспорте JSON текущего графа добавляется после этого текста.",
+    "promptModalReset": "Сбросить по умолчанию",
+    "promptModalCancel": "Отмена",
+    "promptModalSave": "Сохранить",
+    "promptModalSaved": "Промпт сохранён",
+    "promptModalResetDone": "Промпт по умолчанию восстановлен"
+  },
+  "errors": {
+    "entityNotFound": "Сущность не найдена ({{name}})"
+  },
+  "toast": {
+    "created": "Создано",
+    "saved": "Сохранено",
+    "deleted": "Удалено",
+    "linkCreated": "Связь создана",
+    "typeAdded": "Тип добавлен",
+    "typeUpdated": "Тип обновлён",
+    "typeNotFound": "Тип не найден",
+    "updated": "Актуально",
+    "layoutDone": "Расположение пересчитано",
+    "resetDone": "Граф очищен",
+    "emptyGraph": "Пустой граф",
+    "loadError": "Ошибка загрузки",
+    "error": "Ошибка",
+    "networkError": "Сетевая ошибка",
+    "typeRequired": "Требуется тип",
+    "endpointsRequired": "Укажите источник и цель",
+    "undoDone": "Отменено",
+    "undoFailed": "Невозможно отменить",
+    "redoDone": "Повторено",
+    "redoFailed": "Невозможно повторить",
+    "creating": "Создание…",
+    "saving": "Сохранение…"
+  }
+}

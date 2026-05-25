@@ -1,0 +1,221 @@
+{
+  "meta": {
+    "pageTitle": "MultiGraph Lab"
+  },
+  "sidebar": {
+    "close": "Close menu",
+    "browse": "Browse",
+    "create": "Create",
+    "detail": "Detail",
+    "ai": "AI",
+    "sections": "Sections",
+    "help": "Help (?)",
+    "pin": "Pin sidebar",
+    "unpin": "Unpin sidebar"
+  },
+  "browse": {
+    "searchPlaceholder": "Search by name, type or relationship…",
+    "search": "Search",
+    "entityType": "Entity type",
+    "relationshipType": "Relationship type",
+    "allTypes": "All entity types",
+    "allRelTypes": "All relationship types",
+    "loading": "Loading…",
+    "empty": "No entities",
+    "focusOnSelect": "Focus graph on selection"
+  },
+  "create": {
+    "groupLabel": "Creation type",
+    "entity": "Entity",
+    "link": "Link",
+    "type": "Type",
+    "advanced": "Advanced",
+    "linkPendingTitle": "Link in progress",
+    "linkCancel": "Cancel",
+    "linkHint": "Type entity names or click nodes on the graph to fill source and target.",
+    "linkSourcePlaceholder": "Source entity name",
+    "linkTargetPlaceholder": "Target entity name",
+    "relTypeAdmin": "Relationship type (administration)",
+    "relTypeAdminHint": "Create or update a relationship type: display label, color and line style.",
+    "relTypeName": "Type name",
+    "relTypeCustomPlaceholder": "New type (e.g. WORKS_WITH)",
+    "createRelType": "Create type",
+    "updateRelType": "Update type",
+    "lineSolid": "Solid line",
+    "lineDashed": "Dashed line"
+  },
+  "detail": {
+    "empty": "Select a node or relationship on the graph."
+  },
+  "entity": {
+    "new": "New entity",
+    "defaultTitle": "Entity",
+    "namePlaceholder": "Name",
+    "name": "Name",
+    "type": "Type",
+    "typeCustomPlaceholder": "New type",
+    "customType": "Custom type",
+    "create": "Create",
+    "save": "Save",
+    "advanced": "Advanced options",
+    "descriptionPlaceholder": "Description (optional)",
+    "description": "Description",
+    "descriptionViewAll": "View all",
+    "color": "Color",
+    "delete": "Delete",
+    "linkFrom": "Link"
+  },
+  "relationship": {
+    "title": "Relationship",
+    "newLink": "New link",
+    "edit": "Edit relationship",
+    "source": "Source",
+    "target": "Target",
+    "type": "Type",
+    "typeCustomPlaceholder": "New type",
+    "label": "Display label",
+    "labelPlaceholder": "Link label",
+    "createLink": "Create link",
+    "save": "Save",
+    "advancedStyle": "Advanced style",
+    "delete": "Delete",
+    "fallbackLabel": "Relationship",
+    "lineStyle": "Line style"
+  },
+  "header": {
+    "openMenu": "Open menu",
+    "graphTitle": "Multigraph",
+    "help": "Help",
+    "helpTitle": "Help (?)",
+    "theme": "Theme",
+    "history": "History",
+    "undo": "Undo",
+    "redo": "Redo",
+    "modeSelect": "Select",
+    "modeLink": "Link",
+    "reorganize": "Reorganize",
+    "reorganizeTitle": "Recalculate layout",
+    "reset": "Reset",
+    "resetTitle": "Clear graph and start over",
+    "refresh": "Refresh",
+    "refreshTitle": "Reload data",
+    "language": "Language"
+  },
+  "legend": {
+    "title": "Relationships",
+    "toggle": "Show or hide legend"
+  },
+  "mobile": {
+    "createEntity": "Create an entity"
+  },
+  "zoom": {
+    "in": "Zoom in",
+    "out": "Zoom out",
+    "fit": "Fit graph"
+  },
+  "help": {
+    "title": "Keyboard shortcuts",
+    "undo": "Undo",
+    "redo": "Redo",
+    "modeLink": "Link mode",
+    "modeSelect": "Select mode",
+    "delete": "Delete selection",
+    "deselect": "Deselect / cancel",
+    "showHelp": "Show this help",
+    "contact": "Contact:",
+    "close": "Close"
+  },
+  "confirm": {
+    "title": "Confirm",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleteEntityTitle": "Delete entity",
+    "deleteEntityMessage": "Delete « {{name}} » and its relationships?",
+    "deleteRelTitle": "Delete relationship",
+    "deleteRelMessage": "Delete this relationship from the graph?",
+    "resetTitle": "Reset graph?",
+    "resetMessage": "All entities, links and relationship types will be deleted. This cannot be undone.",
+    "resetOk": "Reset"
+  },
+  "link": {
+    "pending": "Source: « {{source}} » — choose the target."
+  },
+  "stats": {
+    "summary": "{{entities}} entities · {{links}} links",
+    "dash": "—"
+  },
+  "form": {
+    "chooseType": "— Choose a type —",
+    "otherType": "Other type…"
+  },
+  "theme": {
+    "auto": "Theme: automatic",
+    "light": "Theme: light",
+    "dark": "Theme: dark"
+  },
+  "ai": {
+    "hint": "Workflow: 1) create a graph from a document, 2) improve it, 3) import the AI JSON response, 4) generate a textual synthesis.",
+    "fromDocument": "Create from a document",
+    "copyPrompt": "Copy AI prompt",
+    "copyPromptTitle": "Copy a ready-to-use prompt for document analysis",
+    "copyPromptDone": "Prompt copied to clipboard",
+    "copyPromptFailed": "Unable to copy prompt",
+    "existingGraph": "Improve existing graph",
+    "title": "AI exchange",
+    "export": "Export for AI",
+    "exportTitle": "Copy graph and prompt to clipboard",
+    "exportDone": "Copied to clipboard",
+    "exportFailed": "Unable to copy",
+    "textSynthesis": "Textual synthesis",
+    "generateSynthesis": "Generate textual synthesis",
+    "generateSynthesisTitle": "Copy a prompt to generate a textual summary of the graph",
+    "synthesisDone": "Synthesis prompt copied to clipboard",
+    "synthesisFailed": "Unable to copy synthesis prompt",
+    "importTitle": "Import from AI",
+    "importPlaceholder": "Paste AI response (JSON) here…",
+    "import": "Import graph",
+    "importConfirmTitle": "Replace graph?",
+    "importConfirmMessage": "All current entities and relationships will be deleted, then the imported graph will be loaded.",
+    "importConfirmOk": "Import",
+    "importDone": "Graph imported",
+    "importFailed": "Invalid or unreadable JSON",
+    "importEmpty": "Paste a JSON response first",
+    "viewPrompt": "View or edit prompt",
+    "promptModalTitleDocument": "Prompt — create from document",
+    "promptModalTitleExport": "Prompt — improve existing graph",
+    "promptModalTitleSynthesis": "Prompt — textual synthesis",
+    "promptModalHintGraphJson": "When you copy or export, the current graph JSON is appended after this text.",
+    "promptModalReset": "Reset to default",
+    "promptModalCancel": "Cancel",
+    "promptModalSave": "Save",
+    "promptModalSaved": "Prompt saved",
+    "promptModalResetDone": "Default prompt restored"
+  },
+  "errors": {
+    "entityNotFound": "Entity not found ({{name}})"
+  },
+  "toast": {
+    "created": "Created",
+    "saved": "Saved",
+    "deleted": "Deleted",
+    "linkCreated": "Link created",
+    "typeAdded": "Type added",
+    "typeUpdated": "Type updated",
+    "typeNotFound": "Type not found",
+    "updated": "Up to date",
+    "layoutDone": "Layout recalculated",
+    "resetDone": "Graph cleared",
+    "emptyGraph": "Empty graph",
+    "loadError": "Load error",
+    "error": "Error",
+    "networkError": "Network error",
+    "typeRequired": "Type required",
+    "endpointsRequired": "Source and target are required",
+    "undoDone": "Undone",
+    "undoFailed": "Cannot undo",
+    "redoDone": "Redone",
+    "redoFailed": "Cannot redo",
+    "creating": "Creating…",
+    "saving": "Saving…"
+  }
+}

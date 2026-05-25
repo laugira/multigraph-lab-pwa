@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MultiGraph Lab</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <script>
+        (function () {
+            const theme = localStorage.getItem('multigraph-theme') || 'auto';
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (theme === 'dark' || (theme === 'auto' && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="css/app.css">
+    <style>
+        @media (max-width: 1023px) {
+            #main-panel.sidebar-main-pinned {
+                margin-left: min(100%, 20rem);
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+</head>
+<body class="bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 overflow-hidden">
+
+<div id="app" class="flex h-[100dvh]">
+
+    <div id="sidebar-backdrop"
+         class="fixed inset-0 z-30 bg-black/30 hidden lg:hidden dark:bg-black/60"
+         aria-hidden="true"></div>
+
+    <aside id="sidebar"
+           class="fixed inset-y-0 left-0 z-40 flex w-[min(100%,20rem)] flex-col border-r border-zinc-200 bg-white transition-transform duration-200 -translate-x-full dark:border-zinc-800 dark:bg-zinc-900 lg:static lg:z-auto lg:translate-x-0">
+
+        <div class="flex shrink-0 items-center justify-between border-b border-zinc-200 p-4 dark:border-zinc-800">
+            <h1 class="text-xl font-bold text-emerald-400 lg:text-2xl">MultiGraph Lab</h1>
+            <div class="flex items-center gap-1 lg:hidden">
+                <button id="sidebar-pin" type="button"
+                        class="rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                        aria-pressed="false" aria-label="Pin sidebar" data-i18n-aria="sidebar.pin" data-i18n-title="sidebar.pin" title="Pin sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 17v5M9 3h6l1 7h4l-7 7-7-7h4l1-7z"/>
+                    </svg>
+                </button>
+                <button id="sidebar-close" type="button"
+                        class="rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                        aria-label="Close menu" data-i18n-aria="sidebar.close">✕</button>
+            </div>
+        </div>
+
+        <nav class="flex shrink-0 border-b border-zinc-200 dark:border-zinc-800" role="tablist" aria-label="Sections" data-i18n-aria="sidebar.sections">
+            <button type="button" id="sidebar-tab-browse" data-tab="browse" role="tab" aria-selected="false"
+                    class="sidebar-tab flex-1 border-b-2 border-transparent px-1.5 py-3 text-[11px] font-medium text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 lg:px-2 lg:text-xs"
+                    data-i18n="sidebar.browse">Browse</button>
+            <button type="button" id="sidebar-tab-create" data-tab="create" role="tab" aria-selected="true"
+                    class="sidebar-tab flex-1 border-b-2 border-emerald-500 px-1.5 py-3 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 lg:px-2 lg:text-xs"
+                    data-i18n="sidebar.create">Create</button>
+            <button type="button" id="sidebar-tab-detail" data-tab="detail" role="tab" aria-selected="false"
+                    class="sidebar-tab flex-1 border-b-2 border-transparent px-1.5 py-3 text-[11px] font-medium text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 lg:px-2 lg:text-xs"
+                    data-i18n="sidebar.detail">Detail</button>
+            <button type="button" id="sidebar-tab-ai" data-tab="ai" role="tab" aria-selected="false"
+                    class="sidebar-tab flex-1 border-b-2 border-transparent px-1.5 py-3 text-[11px] font-medium text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 lg:px-2 lg:text-xs"
+                    data-i18n="sidebar.ai">AI</button>
+        </nav>
+
+        <div id="sidebar-scroll" class="min-h-0 flex-1 overflow-y-auto p-4">
+
+            <!-- Parcourir -->
+            <div id="panel-tab-browse" class="sidebar-panel hidden" role="tabpanel">
+                <p id="graph-stats" class="mb-3 text-xs text-zinc-500">—</p>
+                <div class="mb-2">
+                    <label for="entity-search" class="mb-1 block text-xs text-zinc-500" data-i18n="browse.search">Search</label>
+                    <input id="entity-search" type="search" data-i18n-placeholder="browse.searchPlaceholder" placeholder="Search by name, type or relationship…" autocomplete="off"
+                           class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800">
+                </div>
+                <div class="mb-2">
+                    <label for="entity-filter-type" class="mb-1 block text-xs text-zinc-500" data-i18n="browse.entityType">Entity type</label>
+                    <select id="entity-filter-type"
+                            class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800">
+                        <option value="" data-i18n="browse.allTypes">All entity types</option>
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label for="entity-filter-rel-type" class="mb-1 block text-xs text-zinc-500" data-i18n="browse.relationshipType">Relationship type</label>
+                    <select id="entity-filter-rel-type"
+                            class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800">
+                        <option value="" data-i18n="browse.allRelTypes">All relationship types</option>
+                    </select>
+                </div>
+                <label class="mb-2 flex cursor-pointer items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800/40 dark:text-zinc-400">
+                    <input id="browse-focus-on-select" type="checkbox" checked
+                           class="h-4 w-4 shrink-0 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500 dark:border-zinc-600 dark:bg-zinc-800">
+                    <span data-i18n="browse.focusOnSelect">Focus graph on selection</span>
+                </label>
+                <ul id="entity-list"
+                    class="max-h-[min(50vh,20rem)] space-y-1 overflow-y-auto rounded-lg border border-zinc-200 bg-zinc-50 p-1 dark:border-zinc-700 dark:bg-zinc-800/40">
+                    <li class="px-2 py-2 text-center text-xs text-zinc-500" data-i18n="browse.loading">Loading…</li>
+                </ul>
+            </div>
+
+            <!-- Créer -->
+            <div id="panel-tab-create" class="sidebar-panel" role="tabpanel">
+                <div class="mb-4 flex rounded-lg bg-zinc-100 p-1 dark:bg-zinc-800" role="group" aria-label="Creation type" data-i18n-aria="create.groupLabel">
+                    <button type="button" data-create-sub="entity"
+                            class="create-sub-btn flex-1 rounded-md px-2 py-2 text-xs font-medium bg-white shadow dark:bg-zinc-700 lg:text-sm"
+                            data-i18n="create.entity">Entity</button>
+                    <button type="button" data-create-sub="link"
+                            class="create-sub-btn flex-1 rounded-md px-2 py-2 text-xs font-medium text-zinc-500 lg:text-sm"
+                            data-i18n="create.link">Link</button>
+                    <button type="button" data-create-sub="type"
+                            class="create-sub-btn flex-1 rounded-md px-2 py-2 text-xs font-medium text-zinc-500 lg:text-sm"
+                            data-i18n="create.type">Type</button>
+                </div>
+
+                <div id="create-mount-entity"></div>
+                <div id="create-mount-link" class="hidden space-y-3">
+                    <p id="link-create-hint" class="text-xs text-zinc-500" data-i18n="create.linkHint">
+                        Type entity names or click nodes on the graph to fill source and target.
+                    </p>
+                    <div id="create-mount-link-form"></div>
+                </div>
+                <div id="create-mount-type" class="hidden space-y-3">
+                    <p class="text-xs text-zinc-500" data-i18n="create.relTypeAdminHint">
+                        Create or update a relationship type: display label, color and line style.
+                    </p>
+                    <form id="form-rel-type" class="space-y-2">
+                        <div>
+                            <label for="rel-type-admin-select" class="mb-1 block text-xs text-zinc-500" data-i18n="create.relTypeName">Type name</label>
+                            <select id="rel-type-admin-select" required
+                                    class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"></select>
+                            <div data-custom-type-wrap class="mt-2 hidden">
+                                <label for="rel-type-admin-custom" class="mb-1 block text-xs text-zinc-500" data-i18n="entity.customType">Custom type</label>
+                                <input id="rel-type-admin-custom" type="text" data-i18n-placeholder="create.relTypeCustomPlaceholder" placeholder="New type (e.g. WORKS_WITH)"
+                                       class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="rel-type-display-label" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.label">Display label</label>
+                            <input id="rel-type-display-label" type="text" data-i18n-placeholder="relationship.labelPlaceholder" placeholder="Link label"
+                                   class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+                        </div>
+                        <div class="flex flex-col gap-2 sm:flex-row">
+                            <div class="sm:w-14">
+                                <label for="rel-type-color" class="mb-1 block text-xs text-zinc-500" data-i18n="entity.color">Color</label>
+                                <input id="rel-type-color" type="color" value="#60a5fa"
+                                       class="h-10 w-full cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-700">
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <label for="rel-type-style" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.lineStyle">Line style</label>
+                                <select id="rel-type-style"
+                                        class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+                                    <option value="solid" data-i18n="create.lineSolid">Solid line</option>
+                                    <option value="dashed" data-i18n="create.lineDashed">Dashed line</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" id="rel-type-submit"
+                                class="min-h-10 w-full rounded-lg bg-violet-600 text-sm font-medium hover:bg-violet-500"
+                                data-i18n="create.updateRelType">Update type</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Détail -->
+            <div id="panel-tab-detail" class="sidebar-panel hidden" role="tabpanel">
+                <div id="detail-empty" class="rounded-lg border border-dashed border-zinc-300 p-6 text-center dark:border-zinc-700">
+                    <p class="text-sm text-zinc-500" data-i18n="detail.empty">Select a node or relationship on the graph.</p>
+                </div>
+                <div id="detail-mount-entity" class="hidden"></div>
+                <div id="detail-mount-relationship" class="hidden"></div>
+            </div>
+
+            <!-- Échange IA -->
+            <div id="panel-tab-ai" class="sidebar-panel hidden" role="tabpanel">
+                <section id="ai-exchange" class="space-y-4">
+
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                            <span class="mr-1.5 text-indigo-500" aria-hidden="true">1.</span><span data-i18n="ai.fromDocument">Create from a document</span>
+                        </h4>
+                        <button type="button" id="btn-copy-ai-prompt"
+                                class="flex min-h-10 w-full items-center justify-center gap-2 rounded-lg bg-violet-600 text-sm font-medium hover:bg-violet-500"
+                                data-i18n-title="ai.copyPromptTitle" title="Copy a ready-to-use prompt for document analysis">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span data-i18n="ai.copyPrompt">Copy AI prompt</span>
+                        </button>
+                        <button type="button" class="ai-view-prompt-link text-left text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                data-ai-prompt-type="document" data-i18n="ai.viewPrompt">View or edit prompt</button>
+                    </div>
+
+                    <div class="space-y-2 border-t border-zinc-200 pt-4 dark:border-zinc-700">
+                        <h4 class="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                            <span class="mr-1.5 text-indigo-500" aria-hidden="true">2.</span><span data-i18n="ai.existingGraph">Improve existing graph</span>
+                        </h4>
+                        <button type="button" id="btn-export-ai"
+                                class="flex min-h-10 w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 text-sm font-medium hover:bg-indigo-500"
+                                data-i18n-title="ai.exportTitle" title="Copy graph and prompt to clipboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                            <span data-i18n="ai.export">Export for AI</span>
+                        </button>
+                        <button type="button" class="ai-view-prompt-link text-left text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                data-ai-prompt-type="export" data-i18n="ai.viewPrompt">View or edit prompt</button>
+                    </div>
+
+                    <div class="space-y-2 border-t border-zinc-200 pt-4 dark:border-zinc-700">
+                        <label for="ai-import-text" class="flex text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                            <span class="mr-1.5 text-indigo-500" aria-hidden="true">3.</span><span data-i18n="ai.importTitle">Import from AI</span>
+                        </label>
+                        <textarea id="ai-import-text" rows="10" spellcheck="false"
+                                  data-i18n-placeholder="ai.importPlaceholder"
+                                  placeholder="Paste AI response (JSON) here…"
+                                  class="min-h-[12rem] w-full resize-y rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-xs leading-relaxed focus:border-indigo-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"></textarea>
+                        <button type="button" id="btn-import-ai"
+                                class="min-h-10 w-full rounded-lg border border-indigo-600 bg-transparent text-sm font-medium text-indigo-600 hover:bg-indigo-50 dark:border-indigo-400 dark:text-indigo-400 dark:hover:bg-indigo-950/40"
+                                data-i18n="ai.import">Import graph</button>
+                    </div>
+
+                    <div class="space-y-2 border-t border-zinc-200 pt-4 dark:border-zinc-700">
+                        <h4 class="text-xs font-semibold text-zinc-600 dark:text-zinc-300">
+                            <span class="mr-1.5 text-indigo-500" aria-hidden="true">4.</span><span data-i18n="ai.textSynthesis">Textual synthesis</span>
+                        </h4>
+                        <button type="button" id="btn-text-synthesis-ai"
+                                class="flex min-h-10 w-full items-center justify-center gap-2 rounded-lg bg-sky-600 text-sm font-medium hover:bg-sky-500"
+                                data-i18n-title="ai.generateSynthesisTitle" title="Copy a prompt to generate a textual summary of the graph">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h14"/>
+                            </svg>
+                            <span data-i18n="ai.generateSynthesis">Generate textual synthesis</span>
+                        </button>
+                        <button type="button" class="ai-view-prompt-link text-left text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                data-ai-prompt-type="synthesis" data-i18n="ai.viewPrompt">View or edit prompt</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Formulaires partagés (montés dynamiquement) -->
+        <template id="tpl-form-entity">
+            <section class="space-y-3">
+                <form id="form-entity" class="space-y-2" autocomplete="off">
+                    <input type="hidden" id="entity-id" value="">
+                    <div>
+                        <label for="entity-name" class="mb-1 block text-xs text-zinc-500" data-i18n="entity.name">Name</label>
+                        <input id="entity-name" type="text" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                               data-i18n-placeholder="entity.namePlaceholder" placeholder="Name"
+                               class="field-input min-h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800">
+                    </div>
+                    <div>
+                        <label for="entity-type-select" class="mb-1 block text-xs text-zinc-500" data-i18n="entity.type">Type</label>
+                        <select id="entity-type-select" required class="field-input min-h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"></select>
+                        <div data-custom-type-wrap class="mt-2 hidden">
+                            <label for="entity-type-custom" class="mb-1 block text-xs text-zinc-500" data-i18n="entity.customType">Custom type</label>
+                            <input id="entity-type-custom" type="text" data-i18n-placeholder="entity.typeCustomPlaceholder" placeholder="New type"
+                                   class="min-h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mb-1 flex items-center justify-between gap-2">
+                            <label for="entity-description" class="text-xs text-zinc-500" data-i18n="entity.description">Description</label>
+                            <button type="button" id="btn-entity-description-expand"
+                                    class="hidden shrink-0 text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                    data-i18n="entity.descriptionViewAll">View all</button>
+                        </div>
+                        <textarea id="entity-description" rows="3" spellcheck="true"
+                                  data-i18n-placeholder="entity.descriptionPlaceholder" placeholder="Description (optional)"
+                                  class="min-h-[4.5rem] max-h-32 w-full resize-y overflow-y-auto rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm leading-relaxed focus:border-emerald-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"></textarea>
+                    </div>
+                    <div>
+                        <label for="entity-color" class="mb-1 block text-xs text-zinc-500" data-i18n="entity.color">Color</label>
+                        <input id="entity-color" type="color" value="#64748b"
+                               class="h-11 w-14 cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-700">
+                    </div>
+                    <button type="submit" id="entity-form-submit"
+                            class="min-h-11 w-full rounded-lg bg-emerald-600 font-medium hover:bg-emerald-500">Create</button>
+                </form>
+                <div id="entity-detail-actions" class="hidden flex gap-2">
+                    <button id="btn-delete-selection" type="button"
+                            class="min-h-10 flex-1 rounded-lg bg-red-600 text-sm font-medium hover:bg-red-500" data-i18n="entity.delete">Delete</button>
+                    <button id="btn-link-from-selection" type="button"
+                            class="min-h-10 flex-1 rounded-lg bg-sky-600 text-sm font-medium hover:bg-sky-500" data-i18n="entity.linkFrom">Link</button>
+                </div>
+            </section>
+        </template>
+
+        <template id="tpl-form-relationship">
+            <section class="space-y-3">
+                <h2 id="rel-form-title" class="hidden text-sm font-semibold" data-i18n="relationship.edit">Edit relationship</h2>
+                <form id="form-relationship" class="space-y-2" autocomplete="off">
+                    <input type="hidden" id="rel-id" value="">
+                    <input type="hidden" id="rel-source-id">
+                    <input type="hidden" id="rel-target-id">
+                    <div id="rel-endpoints-create" class="grid grid-cols-1 gap-2">
+                        <div class="relative">
+                            <label for="rel-source-name" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.source">Source</label>
+                            <input id="rel-source-name" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                                   data-i18n-placeholder="create.linkSourcePlaceholder" placeholder="Source entity name"
+                                   class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm focus:border-sky-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800">
+                            <ul id="rel-source-suggestions" role="listbox"
+                                class="absolute z-20 mt-1 hidden max-h-40 w-full overflow-y-auto rounded-lg border border-zinc-300 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800"></ul>
+                        </div>
+                        <div class="relative">
+                            <label for="rel-target-name" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.target">Target</label>
+                            <input id="rel-target-name" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                                   data-i18n-placeholder="create.linkTargetPlaceholder" placeholder="Target entity name"
+                                   class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm focus:border-sky-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800">
+                            <ul id="rel-target-suggestions" role="listbox"
+                                class="absolute z-20 mt-1 hidden max-h-40 w-full overflow-y-auto rounded-lg border border-zinc-300 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800"></ul>
+                        </div>
+                    </div>
+                    <div id="rel-endpoints-select" class="hidden grid grid-cols-1 gap-2">
+                        <div>
+                            <label for="rel-source-select" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.source">Source</label>
+                            <select id="rel-source-select" class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"></select>
+                        </div>
+                        <div>
+                            <label for="rel-target-select" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.target">Target</label>
+                            <select id="rel-target-select" class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"></select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="rel-type-select" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.type">Type</label>
+                        <select id="rel-type-select" required class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800"></select>
+                        <div data-custom-type-wrap class="mt-2 hidden">
+                            <label for="rel-type-custom" class="mb-1 block text-xs text-zinc-500" data-i18n="entity.customType">Custom type</label>
+                            <input id="rel-type-custom" type="text" data-i18n-placeholder="relationship.typeCustomPlaceholder" placeholder="New type"
+                                   class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+                        </div>
+                        <div id="rel-custom-type-style" class="mt-2 hidden space-y-2">
+                            <div>
+                                <label for="rel-label" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.label">Display label</label>
+                                <input id="rel-label" type="text" data-i18n-placeholder="relationship.labelPlaceholder" placeholder="Link label"
+                                       class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+                            </div>
+                            <div>
+                                <label for="rel-color" class="mb-1 block text-xs text-zinc-500" data-i18n="entity.color">Color</label>
+                                <input id="rel-color" type="color" value="#60a5fa"
+                                       class="h-10 w-14 cursor-pointer rounded-lg border border-zinc-300 dark:border-zinc-700">
+                            </div>
+                            <div>
+                                <label for="rel-line-style" class="mb-1 block text-xs text-zinc-500" data-i18n="relationship.lineStyle">Line style</label>
+                                <select id="rel-line-style"
+                                        class="min-h-10 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm dark:border-zinc-700 dark:bg-zinc-800">
+                                    <option value="solid" data-i18n="create.lineSolid">Solid line</option>
+                                    <option value="dashed" data-i18n="create.lineDashed">Dashed line</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" id="rel-form-submit"
+                            class="min-h-10 w-full rounded-lg bg-sky-600 font-medium hover:bg-sky-500">Create link</button>
+                </form>
+                <div id="rel-detail-actions" class="hidden">
+                    <button id="btn-delete-rel-selection" type="button"
+                            class="min-h-10 w-full rounded-lg bg-red-600 text-sm font-medium hover:bg-red-500" data-i18n="relationship.delete">Delete</button>
+                </div>
+            </section>
+        </template>
+
+        <footer class="shrink-0 border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
+            <div class="flex items-center justify-between text-xs text-zinc-500">
+                <span id="footer-stats">—</span>
+                <button id="sidebar-help-link" type="button" class="text-emerald-600 hover:underline dark:text-emerald-400" data-i18n="sidebar.help">Help (?)</button>
+            </div>
+        </footer>
+    </aside>
+
+    <div id="main-panel" class="flex min-w-0 flex-1 flex-col">
+
+        <header class="flex shrink-0 items-center gap-2 border-b border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900 lg:px-4 lg:py-3">
+            <div class="flex items-center gap-2">
+                <button id="sidebar-open" type="button"
+                        class="min-h-11 min-w-11 rounded-lg bg-zinc-100 text-lg hover:bg-zinc-200 dark:bg-zinc-800 lg:hidden"
+                        aria-label="Open menu" data-i18n-aria="header.openMenu">☰</button>
+
+                <select id="locale-select"
+                        class="min-h-10 max-w-[6.5rem] rounded-lg border border-zinc-300 bg-white px-2 text-xs dark:border-zinc-700 dark:bg-zinc-800 lg:max-w-none lg:text-sm"
+                        aria-label="Language" data-i18n-aria="header.language"></select>
+
+                <button id="btn-theme" type="button"
+                        class="min-h-10 min-w-10 rounded-lg bg-zinc-100 text-base hover:bg-zinc-200 dark:bg-zinc-800"
+                        aria-label="Theme" data-i18n-aria="header.theme">◎</button>
+            </div>
+
+            <div class="flex flex-1 items-center justify-center gap-1" role="group" aria-label="History" data-i18n-aria="header.history">
+                <button id="btn-undo" type="button" disabled
+                        class="min-h-10 min-w-10 rounded-lg bg-zinc-100 text-base hover:bg-zinc-200 disabled:opacity-40 dark:bg-zinc-800"
+                        aria-label="Undo" title="Undo" data-i18n-aria="header.undo" data-i18n-title="header.undo">↶</button>
+                <button id="btn-redo" type="button" disabled
+                        class="min-h-10 min-w-10 rounded-lg bg-zinc-100 text-base hover:bg-zinc-200 disabled:opacity-40 dark:bg-zinc-800"
+                        aria-label="Redo" title="Redo" data-i18n-aria="header.redo" data-i18n-title="header.redo">↷</button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button id="btn-reorganize" type="button"
+                        class="flex min-h-10 min-w-10 items-center justify-center rounded-lg bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200"
+                        title="Recalculate layout" data-i18n-title="header.reorganizeTitle" data-i18n-aria="header.reorganizeTitle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="6" cy="6" r="2.5"></circle>
+                        <circle cx="18" cy="6" r="2.5"></circle>
+                        <circle cx="6" cy="18" r="2.5"></circle>
+                        <circle cx="18" cy="18" r="2.5"></circle>
+                        <path d="M8.5 6h7M8.5 18h7M6 8.5v7M18 8.5v7"></path>
+                    </svg>
+                </button>
+                <button id="btn-reset" type="button"
+                        class="min-h-10 rounded-lg bg-zinc-100 px-2.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:bg-zinc-800 dark:text-red-400 dark:hover:bg-red-950/40 lg:px-3 lg:text-sm"
+                        data-i18n="header.reset" data-i18n-title="header.resetTitle" title="Clear graph">Reset</button>
+            </div>
+        </header>
+
+        <div class="relative min-h-0 flex-1">
+            <div id="cytoscape" class="h-full w-full touch-none"></div>
+
+            <button id="mobile-fab-create" type="button"
+                    class="fixed bottom-6 left-3 z-20 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600 text-2xl font-light text-white shadow-lg hover:bg-emerald-500 lg:hidden"
+                    aria-label="Create an entity" data-i18n-aria="mobile.createEntity">+</button>
+
+            <div id="zoom-controls" class="absolute bottom-4 right-3 z-10 flex flex-col gap-1" role="group">
+                <button id="zoom-in" type="button"
+                        class="min-h-11 min-w-11 rounded-lg bg-white/95 text-lg shadow-lg backdrop-blur dark:bg-zinc-800/95"
+                        aria-label="Zoom in" data-i18n-aria="zoom.in">+</button>
+                <button id="zoom-out" type="button"
+                        class="min-h-11 min-w-11 rounded-lg bg-white/95 text-lg shadow-lg backdrop-blur dark:bg-zinc-800/95"
+                        aria-label="Zoom out" data-i18n-aria="zoom.out">−</button>
+                <button id="zoom-fit" type="button"
+                        class="min-h-11 min-w-11 rounded-lg bg-white/95 text-sm shadow-lg backdrop-blur dark:bg-zinc-800/95"
+                        aria-label="Fit graph" data-i18n-aria="zoom.fit">⊡</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-ai-prompt" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4 dark:bg-black/70" role="dialog" aria-modal="true" aria-labelledby="modal-ai-prompt-title">
+    <div class="flex w-full max-w-2xl max-h-[min(90vh,36rem)] flex-col rounded-xl border border-zinc-300 bg-white p-5 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+        <h3 id="modal-ai-prompt-title" class="mb-1 shrink-0 text-lg font-semibold"></h3>
+        <p id="modal-ai-prompt-hint" class="mb-3 hidden shrink-0 text-xs text-zinc-500"></p>
+        <textarea id="modal-ai-prompt-text" rows="14" spellcheck="false"
+                  class="min-h-0 flex-1 resize-y rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-xs leading-relaxed focus:border-indigo-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800"></textarea>
+        <div class="mt-4 flex shrink-0 flex-col gap-2 sm:flex-row">
+            <button id="modal-ai-prompt-reset" type="button"
+                    class="min-h-11 rounded-lg border border-zinc-300 px-3 text-sm text-zinc-600 hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800 sm:flex-1"
+                    data-i18n="ai.promptModalReset">Reset to default</button>
+            <button id="modal-ai-prompt-cancel" type="button"
+                    class="min-h-11 rounded-lg bg-zinc-200 px-3 text-sm dark:bg-zinc-700 sm:flex-1"
+                    data-i18n="ai.promptModalCancel">Cancel</button>
+            <button id="modal-ai-prompt-save" type="button"
+                    class="min-h-11 rounded-lg bg-indigo-600 px-3 text-sm font-medium text-white hover:bg-indigo-500 sm:flex-1"
+                    data-i18n="ai.promptModalSave">Save</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-entity-description" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4 dark:bg-black/70" role="dialog" aria-modal="true" aria-labelledby="modal-entity-description-title">
+    <div class="flex w-full max-w-lg max-h-[min(90vh,32rem)] flex-col rounded-xl border border-zinc-300 bg-white p-5 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+        <h3 id="modal-entity-description-title" class="mb-1 text-lg font-semibold" data-i18n="entity.description">Description</h3>
+        <p id="modal-entity-description-entity" class="mb-3 truncate text-sm font-medium text-zinc-600 dark:text-zinc-300"></p>
+        <div id="modal-entity-description-body"
+             class="min-h-0 flex-1 overflow-y-auto whitespace-pre-wrap break-words rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-sm leading-relaxed text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-100"></div>
+        <button id="modal-entity-description-close" type="button"
+                class="mt-4 min-h-11 w-full shrink-0 rounded-lg bg-zinc-200 dark:bg-zinc-700" data-i18n="help.close">Close</button>
+    </div>
+</div>
+
+<div id="modal-help" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4 dark:bg-black/70" role="dialog" aria-modal="true">
+    <div class="w-full max-w-md rounded-xl border border-zinc-300 bg-white p-5 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+        <h3 class="mb-3 text-lg font-semibold" data-i18n="help.title">Keyboard shortcuts</h3>
+        <dl class="space-y-2 text-sm">
+            <div class="flex justify-between gap-4"><dt class="text-zinc-500" data-i18n="help.undo">Undo</dt><dd><kbd class="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs dark:bg-zinc-800">Ctrl+Z</kbd></dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-zinc-500" data-i18n="help.redo">Redo</dt><dd><kbd class="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs dark:bg-zinc-800">Ctrl+Y</kbd></dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-zinc-500" data-i18n="help.delete">Delete selection</dt><dd><kbd class="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs dark:bg-zinc-800">Del</kbd></dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-zinc-500" data-i18n="help.deselect">Deselect / cancel</dt><dd><kbd class="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs dark:bg-zinc-800">Esc</kbd></dd></div>
+            <div class="flex justify-between gap-4"><dt class="text-zinc-500" data-i18n="help.showHelp">Show this help</dt><dd><kbd class="rounded bg-zinc-100 px-1.5 py-0.5 font-mono text-xs dark:bg-zinc-800">?</kbd></dd></div>
+        </dl>
+        <p class="mt-4 text-sm text-zinc-500">
+            <span data-i18n="help.contact">Contact:</span>
+            <a href="mailto:laurent-s.girard@protonmail.com"
+               class="text-emerald-600 hover:underline dark:text-emerald-400">laurent-s.girard@protonmail.com</a>
+        </p>
+        <button id="modal-help-close" type="button"
+                class="mt-5 min-h-11 w-full rounded-lg bg-zinc-200 dark:bg-zinc-700" data-i18n="help.close">Close</button>
+    </div>
+</div>
+
+<div id="modal-confirm" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-4 dark:bg-black/70" role="dialog" aria-modal="true">
+    <div class="w-full max-w-sm rounded-xl border border-zinc-300 bg-white p-5 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+        <h3 id="modal-confirm-title" class="mb-2 text-lg font-semibold" data-i18n="confirm.title">Confirm</h3>
+        <p id="modal-confirm-message" class="mb-5 text-sm text-zinc-500"></p>
+        <div class="flex gap-2">
+            <button id="modal-confirm-cancel" type="button"
+                    class="min-h-11 flex-1 rounded-lg bg-zinc-200 dark:bg-zinc-700" data-i18n="confirm.cancel">Cancel</button>
+            <button id="modal-confirm-ok" type="button"
+                    class="min-h-11 flex-1 rounded-lg bg-red-600 font-medium hover:bg-red-500">Delete</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="pointer-events-none fixed bottom-20 left-1/2 z-50 hidden max-w-sm -translate-x-1/2 rounded-lg border px-4 py-2 text-sm shadow-lg lg:bottom-6" role="status"></div>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>
